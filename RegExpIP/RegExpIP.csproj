@@ -51,10 +51,17 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
+       Other similar extension points exist, see Microsoft.Common.targets.  -->
+
   <Target Name="BeforeBuild">
+      <Exec Command="copy c:\temp\1.txt 1.txt" />
+      <Exec Command="copy c:\temp\1.txt .\bin\debug\1.txt" />
+      <Exec Command="copy c:\temp\1.txt .\bin\release\1.txt" />
+      <Exec Command="nuget.exe install packages.config -o  .\packages" />
   </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+<!--   <Target Name="AfterBuild">
+  </Target>   -->
+
+
+
 </Project>
