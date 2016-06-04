@@ -1,1 +1,2 @@
 D:\projects\my\RegExpIP\RegExpIP\bin\Debug\RegExpIP.exe.config
+D:\v_rymarev\Dropbox\work\projects\RegExpIP\RegExpIP\bin\Debug\RegExpIP.exe.config
