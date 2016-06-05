@@ -68,6 +68,7 @@ namespace RegExpIP
                     comparisonResult = "no match";
                 //write result to file
                 fileOutput.WriteLine (string.Concat(line, "\t", comparisonResult));
+                Console.WriteLine(string.Concat(line, "\t", comparisonResult));
             }
             //close all file
             fileInput.Close();
@@ -87,7 +88,7 @@ namespace RegExpIP
             var options = new Options();
 
             string regPatIP = @"((0?[0-3]?[0-7]{0,10}$)|((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|0+[1-3]?[0-7]{0,2}|0x[0-9A-Fa-f][0-9A-Fa-f])\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|0+[1-3]?[0-7]{0,2}|0x[0-9A-Fa-f][0-9A-Fa-f])\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|0+[1-3]?[0-7]{0,2}|0x[0-9A-Fa-f][0-9A-Fa-f])\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|0+[1-3]?[0-7]{0,2}|0x[0-9A-Fa-f][0-9A-Fa-f])$)|(429496729[0-5]|42949672[0-8]\d|4294967[01]\d\d|429496[0-6]\d{3}|42949[0-5]\d{4}|4294[0-8]\d{5}|429[0-3]\d{6}|42[0-8]\d{7}|4[01]\d{8}|[1-3]\d{0,9}|[4-9]\d{0,8}$)|(0x0*[0-9a-f]{1,8}$))";
-            string regPatName = @"(http(s)?:\/\/[0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*(:(0-9)*)*(\/?)([a-zA-Z0-9\-‌​\.\?\,\'\/\\\+&amp;%\$#_]*)?$)";
+            string regPatName = @"(http(s)?:\/\/[0-9A-Za-z]([\-\.0-9A-Za-z]*([A-Za-z]|([A-Za-z][0-9])){1,62})*(\.)([0-9A-Za-z])+(\:[0-9]{2,5})?(\/?)$)";
 
             Parser.Default.ParseArguments(args, options);
             while ((args.Length == 0) && (String.IsNullOrEmpty(options.InputFile)) )
