@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using CommandLine;
 using System.IO;
@@ -16,10 +12,70 @@ namespace RegExpIP
           HelpText = "Input file to be processed.")]
         public string InputFile { get; set; }
 
-        [Option('o', "output file", Required = false,
-          HelpText = "Input file to be processed or just add _result to the end of name")]
-        public string OutputFile { get; set; }
+        [Option('m', "method", Required = false,
+          HelpText = "1 - ip, 2 - adress")]
+        public int Method { get; set; }
 
+    }
+
+    class regExFilteringToFile
+    {
+        public string pathToTxtInputFileWithDataList; // path to input file
+        public string regexPattern; // regular expression patern
+
+        public void regex_match()
+        {
+            // variable for reading from file
+            string line;
+            // variable for Output file
+            string pathToTxtOutputFileWithDataList;
+
+            // define input file
+            StreamReader fileInput = new StreamReader(pathToTxtInputFileWithDataList);
+
+            // regex for filename
+            string patFileName = @"([^\.]*)";
+            Regex r1 = new Regex(patFileName, RegexOptions.IgnoreCase);
+
+            // regex for file extension
+            string patFileExt = @"\.([A-Za-z0-9]+)$";
+            Regex r2 = new Regex(patFileExt, RegexOptions.IgnoreCase);
+
+            //regexp evaluating for output file
+            Match fileName = r1.Match(pathToTxtInputFileWithDataList);
+            Match fileExt = r2.Match(pathToTxtInputFileWithDataList);
+
+            //evaluating output filename
+            pathToTxtOutputFileWithDataList = string.Concat(fileName.ToString(), "_result.", fileExt.ToString());
+
+            // define output file
+            StreamWriter fileOutput = new StreamWriter(pathToTxtOutputFileWithDataList);
+
+            //define regexp and temp variable
+            Regex row = new Regex(regexPattern, RegexOptions.IgnoreCase);
+            string comparisonResult;
+
+
+            //while EOF
+            while ((line = fileInput.ReadLine()) != null)
+            {
+                //processing RegExp for next line from file
+                Match rowResult = row.Match(line);
+                //Comparing RegExp result and input string
+                if (String.Compare(rowResult.ToString(), line) == 0)
+                    comparisonResult = "match";
+                else
+                    comparisonResult = "no match";
+                //write result to file
+                fileOutput.WriteLine (string.Concat(line, "\t", comparisonResult));
+            }
+            //close all file
+            fileInput.Close();
+            fileOutput.Close();
+
+            Console.WriteLine("All done, press any key to exit");
+            Console.ReadKey();
+        }
     }
 
     class Program
@@ -30,42 +86,52 @@ namespace RegExpIP
 
             var options = new Options();
 
-            CommandLine.Parser.Default.ParseArguments(args, options);
-            while (args.Length == 0)
+            string regPatIP = @"((0?[0-3]?[0-7]{0,10}$)|((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|0+[1-3]?[0-7]{0,2}|0x[0-9A-Fa-f][0-9A-Fa-f])\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|0+[1-3]?[0-7]{0,2}|0x[0-9A-Fa-f][0-9A-Fa-f])\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|0+[1-3]?[0-7]{0,2}|0x[0-9A-Fa-f][0-9A-Fa-f])\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|0+[1-3]?[0-7]{0,2}|0x[0-9A-Fa-f][0-9A-Fa-f])$)|(429496729[0-5]|42949672[0-8]\d|4294967[01]\d\d|429496[0-6]\d{3}|42949[0-5]\d{4}|4294[0-8]\d{5}|429[0-3]\d{6}|42[0-8]\d{7}|4[01]\d{8}|[1-3]\d{0,9}|[4-9]\d{0,8}$)|(0x0*[0-9a-f]{1,8}$))";
+            string regPatName = @"(http(s)?:\/\/[0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*(:(0-9)*)*(\/?)([a-zA-Z0-9\-‌​\.\?\,\'\/\\\+&amp;%\$#_]*)?$)";
+
+            Parser.Default.ParseArguments(args, options);
+            while ((args.Length == 0) && (String.IsNullOrEmpty(options.InputFile)) )
             {
-                System.Console.WriteLine("No parameters for run . ");
-                System.Console.WriteLine("Possible usage: RegExpIP -i 'pathToInputFile' [-o 'pathToInputFile']");
-                System.Console.WriteLine("Now you may select default filename (TestData_IP4RegExp_DataSet1.txt) for current folder (just click enter) or ");
-                System.Console.WriteLine("enter new filename or exit by typing EXIT. Result file will be with _result adding");
-                String argStr;
-                argStr = System.Console.ReadLine();
-                if (argStr == "")
-                { //if empty string - take hardcoded filename
-                    options.InputFile = "TestData_IP4RegExp_DataSet1.txt";
-                    options.OutputFile = "TestData_IP4RegExp_DataSet1_result.txt";
-                }
-                else if (argStr.ToLower() == "EXIT")
-                { //EXIT
-                    Console.WriteLine("Bye");
-                    return 1;
-                }
-                else
+                Console.WriteLine("No parameters for run . ");
+                Console.WriteLine("Possible usage: RegExpIP -i 'pathToInputFile' [-m 1 ]");
+                string argStr;
+
+                if ((args.Length == 0) || (String.IsNullOrEmpty(options.InputFile)))
                 {
-                    // regex for filename
-                    string patFileName = @"(.+?)(\.[^.]*$|$)";
-                    Regex r1 = new Regex(patFileName, RegexOptions.IgnoreCase);
+                    Console.WriteLine("After m 1 - ip, other - adress");
+                    Console.WriteLine("Now you may select default filename (TestData_IP4RegExp_DataSet1.txt) for current folder (just click enter) or ");
+                    Console.WriteLine("enter new filename or exit by typing EXIT. Result file will be with _result adding");
 
-                    // regex for file extension
-                    string patFileExt = @"\.([A-Za-z0-9]+)$";
-                    Regex r2 = new Regex(patFileName, RegexOptions.IgnoreCase);
-
-                    Match filename1 = r1.Match(argStr);
-                    Match filename2 = r2.Match(argStr);
-
-                    //input file
-                    options.InputFile = argStr;
-                    //output file
-                    options.OutputFile = String.Concat(filename1.ToString(),"_result.",filename2.ToString());
+                    argStr = Console.ReadLine();
+                    if (argStr == "")
+                    { //if empty string - take hardcoded filename
+                        options.InputFile = "TestData_IP4RegExp_DataSet1.txt";
+                    }
+                    else if (argStr.ToLower() == "EXIT")
+                    { //EXIT
+                        Console.WriteLine("Bye");
+                        return 1;
+                    }
+                    else
+                    {
+                        options.InputFile = argStr;
+                    }
+                }
+                if ((options.Method != 1) | (options.Method != 2))
+                {
+                    Console.WriteLine("Now you may define method  1 - ip, other - adress");
+                    Console.WriteLine("enter new filename or exit by typing EXIT. Result file will be with _result adding");
+                    argStr = Console.ReadLine();
+                    if ((argStr != "1") || (options.Method != 1))
+                    {
+                        Console.WriteLine("Will be adress filtering");
+                        options.Method = 2;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Will be ip filtering");
+                        options.Method = 1;
+                    }
                 }
             }
 
@@ -77,15 +143,29 @@ namespace RegExpIP
             }
             catch
             {
-                System.Console.WriteLine("Imposible to open file ");
+                Console.WriteLine("Imposible to open file ");
                 return 1;
             }
-            
+            fs.Close();
 
-
-
-
+            if (options.Method == 1)
+            {
+                regExFilteringToFile IP = new regExFilteringToFile();
+                IP.pathToTxtInputFileWithDataList = options.InputFile;
+                IP.regexPattern = regPatIP;
+                IP.regex_match();
+            }
+            else
+            {
+                regExFilteringToFile Adress = new regExFilteringToFile();
+                Adress.pathToTxtInputFileWithDataList = options.InputFile;
+                Adress.regexPattern = regPatName;
+                Adress.regex_match();
+            }
             return 0;
         }
+
+
+
     }
 }

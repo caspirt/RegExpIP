@@ -1,2 +1,11 @@
 D:\projects\my\RegExpIP\RegExpIP\bin\Debug\RegExpIP.exe.config
 D:\v_rymarev\Dropbox\work\projects\RegExpIP\RegExpIP\bin\Debug\RegExpIP.exe.config
+\\192.168.100.3\Dropbox\work\projects\RegExpIP\RegExpIP\bin\Debug\RegExpIP.exe.config
+D:\natasha\caspirt\projects\RegExpIP\RegExpIP\bin\Debug\RegExpIP.exe.config
+D:\natasha\caspirt\projects\RegExpIP\RegExpIP\obj\Debug\RegExpIP.csprojResolveAssemblyReference.cache
+D:\natasha\caspirt\projects\RegExpIP\RegExpIP\bin\Debug\RegExpIP.exe
+D:\natasha\caspirt\projects\RegExpIP\RegExpIP\bin\Debug\RegExpIP.pdb
+D:\natasha\caspirt\projects\RegExpIP\RegExpIP\bin\Debug\CommandLine.dll
+D:\natasha\caspirt\projects\RegExpIP\RegExpIP\bin\Debug\CommandLine.xml
+D:\natasha\caspirt\projects\RegExpIP\RegExpIP\obj\Debug\RegExpIP.exe
+D:\natasha\caspirt\projects\RegExpIP\RegExpIP\obj\Debug\RegExpIP.pdb
