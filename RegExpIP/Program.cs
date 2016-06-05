@@ -46,7 +46,7 @@ namespace RegExpIP
             Match fileExt = r2.Match(pathToTxtInputFileWithDataList);
 
             //evaluating output filename
-            pathToTxtOutputFileWithDataList = string.Concat(fileName.ToString(), "_result.", fileExt.ToString());
+            pathToTxtOutputFileWithDataList = string.Concat(fileName.ToString(), "_result", fileExt.ToString());
 
             // define output file
             StreamWriter fileOutput = new StreamWriter(pathToTxtOutputFileWithDataList);
@@ -68,7 +68,7 @@ namespace RegExpIP
                     comparisonResult = "no match";
                 //write result to file
                 fileOutput.WriteLine (string.Concat(line, "\t", comparisonResult));
-                Console.WriteLine(string.Concat(line, "\t", comparisonResult));
+                //Console.WriteLine(string.Concat(line, "\t", comparisonResult));
             }
             //close all file
             fileInput.Close();
@@ -108,7 +108,7 @@ namespace RegExpIP
                     { //if empty string - take hardcoded filename
                         options.InputFile = "TestData_IP4RegExp_DataSet1.txt";
                     }
-                    else if (argStr.ToLower() == "EXIT")
+                    else if (argStr.ToLower() == "exit")
                     { //EXIT
                         Console.WriteLine("Bye");
                         return 1;
@@ -118,12 +118,13 @@ namespace RegExpIP
                         options.InputFile = argStr;
                     }
                 }
+                Console.WriteLine(string.Concat("File ", options.InputFile," will be processed"));
                 if ((options.Method != 1) | (options.Method != 2))
                 {
                     Console.WriteLine("Now you may define method  1 - ip, other - adress");
-                    Console.WriteLine("enter new filename or exit by typing EXIT. Result file will be with _result adding");
+                    Console.WriteLine("Type method");
                     argStr = Console.ReadLine();
-                    if ((argStr != "1") || (options.Method != 1))
+                    if (argStr != "1")
                     {
                         Console.WriteLine("Will be adress filtering");
                         options.Method = 2;
